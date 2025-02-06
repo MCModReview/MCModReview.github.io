@@ -5,6 +5,6 @@
     <link rel="stylesheet" type="text/css" href="styles/navbar.css">
   </head>
   <body>
-    
+
   </body>
 </HTML>
