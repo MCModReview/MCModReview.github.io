@@ -4,6 +4,8 @@ body {
 }
 
 .topnav {
+  display: flex;
+  align-items: stretch;
   overflow: hidden;
   background-color: #333;
   position: sticky;
@@ -12,13 +14,15 @@ body {
 }
 
 .topnav a {
-  float: left;
+  /*float: left;*/
   color: #f2f2f2;
   text-align: center;
   padding: 2.1vh 1.17vw;
   text-decoration: none;
   font-size: 17px;
 }
+
+
 
 .topnav a:hover {
   background-color: #ddd;
