@@ -4,6 +4,7 @@ body {
 }
 
 .topnav {
+  height: 91vh;
   display: flex;
   align-items: stretch;
   overflow: hidden;
