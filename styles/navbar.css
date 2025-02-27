@@ -4,17 +4,20 @@ body {
 }
 
 .topnav {
-  height: 8.625vh;
+  height: 8.75vh;
   display: flex;
   align-items: stretch;
   overflow: hidden;
-  background-color: #333;
+  background-color: black;
   position: sticky;
   top: 0;
   z-index: 999999999999999999999;
 }
 
 .topnav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   /*float: left;*/
   color: #f2f2f2;
   text-align: center;
@@ -28,9 +31,4 @@ body {
 .topnav a:hover {
   background-color: #ddd;
   color: black;
-}
-
-.topnav a.active {
-  background-color: #04AA6D;
-  color: white;
 }
