@@ -17,18 +17,64 @@ body {
 .topnav a {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   /*float: left;*/
   color: #f2f2f2;
   text-align: center;
   padding: 2.1vh 1.17vw;
   text-decoration: none;
   font-size: 17px;
+  background-color: black;
+  /*transition: 0.32s ease;*/
+  width: 35px;
+  transition: width 0.9s ease;
+  overflow: hidden;
+}
+
+.topnav span {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 1s;
+  white-space: nowrap;
+  color: white;
+}
+
+.topnav a:hover {
+  background-color: #750899;
+  color: black;
+}
+
+#homeButton:hover{
+  width:96px;
+  /*width: 7.1vw;*/
+}
+
+#modsButton:hover{
+  width: 108px;
+}
+
+#aboutButton:hover{
+  width: 90px;
+}
+
+.topnav a:hover i {
+  margin-right: 10px;
+}
+
+.topnav a:hover span {
+  visibility: visible;
+  opacity: 1;
+}
+
+.topnav a.home {
+  display: inline-flex;
+  align-items: center;
 }
 
 
 
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
+.topnav i {
+  color: white;
+  font-size: 28.5px;
+  transition: margin-right 1s;
 }
