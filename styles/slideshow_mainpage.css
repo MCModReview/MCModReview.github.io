@@ -1,11 +1,15 @@
-.mySlides {display: none}
+.mySlides {
+  display: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
 img {vertical-align: middle;}
 
 /* Slideshow container */
-.slideshow-container {
-  max-width: 1000px;
+.slideshow-containe{
   position: relative;
-  margin: auto;
+  /* margin: auto; */
+  box-sizing: border-box;
 }
 
 /* Next & previous buttons */
@@ -14,6 +18,7 @@ img {vertical-align: middle;}
   position: absolute;
   top: 50%;
   width: auto;
+  margin: 0 10px;
   padding: 16px;
   margin-top: -22px;
   color: white;
@@ -41,7 +46,7 @@ img {vertical-align: middle;}
   font-size: 15px;
   padding: 8px 12px;
   position: absolute;
-  bottom: 8px;
+  bottom: 80px;
   width: 100%;
   text-align: center;
 }
