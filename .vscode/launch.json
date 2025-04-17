@@ -6,7 +6,7 @@
     "configurations": [
         
         {
-            "type": "chrome",
+            "type": "firefox",
             "request": "launch",
             "name": "Open index.html",
             "file": "/home/kaloyan/Development/MCModReview_Local_Clone/MCModReview.github.io/index.html",
