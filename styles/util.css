@@ -1,0 +1,6 @@
+/* Use this to center any object other than an image */
+/* OOOH! DANGEOURS!!! */
+.obj_center_align {
+    display: flex;
+    justify-content: center;
+}
