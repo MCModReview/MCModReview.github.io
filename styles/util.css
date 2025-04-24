@@ -4,3 +4,9 @@
     display: flex;
     justify-content: center;
 }
+
+.obj_round_corner {
+    border-collapse: separate; /* Important */
+    border-radius: 12px;       /* Adjust as needed */
+    overflow: hidden;   
+}

@@ -113,32 +113,33 @@
       <a class="next" onclick="plusSlides(1)">❯</a>
     </div>
 
-    <div class="posts_container">
-      <h1 style="text-align: center;">Latest Posts</h1>
-      <div class="cards_posts_container obj_center_align">
-        <div class="card">
-          <img src="img_avatar.png" alt="Avatar" >
-          <div class="container">
-            <h4><b>John Doe</b></h4> 
-            <p>Architect & Engineer</p> 
-          </div>
+    <div id="latest-posts" class="posts_container">
+    <h1 style="text-align: center;">Latest Posts</h1>
+    <div class="cards_posts_container obj_center_align">
+        <div id="card1" class="card obj_round_corner">
+            <img src="img_avatar.png" alt="Avatar">
+            <div class="container">
+                <h4><b>John Doe</b></h4>
+                <p>Architect & Engineer</p>
+            </div>
         </div>
-        <div class="card">
-          <img src="img_avatar.png" alt="Avatar" style="width:100%">
-          <div class="container">
-            <h4><b>John Doe</b></h4> 
-            <p>Architect & Engineer</p> 
-          </div>
+        <div id="card2"class="card obj_round_corner">
+            <img src="img_avatar.png" alt="Avatar" style="width:100%">
+            <div class="container">
+                <h4><b>John Doe</b></h4>
+                <p>Architect & Engineer</p>
+            </div>
         </div>
-        <div class="card">
-          <img src="img_avatar.png" alt="Avatar" style="width:100%">
-          <div class="container">
-            <h4><b>John Doe</b></h4>  
-            <p>Architect & Engineer</p> 
-          </div>
+        <div id="card3" class="card obj_round_corner">
+            <img src="img_avatar.png" alt="Avatar" style="width:100%">
+            <div class="container">
+                <h4><b>John Doe</b></h4>
+                <p>Architect & Engineer</p>
+            </div>
         </div>
-      </div>
     </div>
+</div>
+
 
     <script>
       
@@ -168,6 +169,74 @@
         slides[slideIndex-1].style.display = "block";  
         //dots[slideIndex-1].className += " active";
     }
-</script>
+  </script>
+  <script>
+    async function loadPostMetadata(file) {
+      try {
+        const res = await fetch(file);
+  
+        if (!res.ok) {
+          throw new Error(`Failed to load post file: ${file}`);
+        }
+  
+        const text = await res.text();
+        const doc = new DOMParser().parseFromString(text, "text/html");
+  
+        const json = doc.getElementById("post-metadata")?.textContent;
+  
+        if (!json) {
+          throw new Error(`No post metadata found in: ${file}`);
+        }
+  
+        const metadata = JSON.parse(json);
+  
+        // Ensure imageWidth and imageHeight exist in metadata, default to '75%' if not present
+        metadata.imageWidth = metadata.imageWidth || '75%';
+        metadata.imageHeight = metadata.imageHeight || 'auto'; // Default height to 'auto'
+  
+        return metadata;
+      } catch (error) {
+        console.error(error); // Log the error to the console
+        return null; // Return null to continue processing the other posts
+      }
+    }
+  
+    async function loadLatestPosts() {
+      const postFiles = [
+        "pages/posts/exampali_mexampaly.html",
+        "posts/post2.html",
+        "posts/post3.html"
+      ];
+  
+      const cardIds = ["card1", "card2", "card3"];
+  
+      for (let i = 0; i < postFiles.length; i++) {
+        const file = postFiles[i];
+        const metadata = await loadPostMetadata(file);
+  
+        if (!metadata) {
+          console.warn(`Skipping post ${file} due to an error in metadata.`);
+          continue; // Skip this post and move to the next one
+        }
+  
+        const card = document.getElementById(cardIds[i]);
+        if (card) {
+          const imageWidth = metadata.imageWidth;
+          const imageHeight = metadata.imageHeight;
+  
+          card.innerHTML = `
+            <img src="${metadata.image}" alt="${metadata.title}" style="width:${imageWidth}; height:${imageHeight};">
+            <div class="container">
+              <h4><b>${metadata.title}</b></h4>
+              <p>${metadata.excerpt}</p>
+            </div>
+          `;
+        }
+      }
+    }
+  
+    // Load posts after the page has loaded
+    window.onload = loadLatestPosts;
+  </script>
   </body>
 </HTML>
