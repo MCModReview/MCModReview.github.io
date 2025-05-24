@@ -7,46 +7,50 @@
         <link rel="stylesheet" type="text/css" href="styles/util.css">
     </head>
     
-    <body style="padding-top: 20vh;">
-        <p style="color: white;">Hello there! (mods page)</p>
-        <button onclick="putElements()">Test</button>
+    <body style="">
         <div style="width: 95vw;" >
             <div id="mods-container" class="mods-grid" style="display: flex; flex-direction: row; width: 100%; flex-wrap: wrap;" class="obj_center_align"></div>
         </div>
         
     </body>
     <script>
-        let count = 0;
-        fetch('/pages/posts/file_index.json') // path to your JSON file
-            .then(response => response.json())
-            .then(data => {
-            // If it's a JSON array
-            count = Array.isArray(data) ? data.length : Object.keys(data).length;
-            console.log('Element count:', count);
-        })
-        .catch(error => console.error('Error loading JSON:', error));
+  let count = 0;
 
-        function putElements(){
-            const container = document.getElementById('mods-container');
-            container.innerHTML = '';
+  // 1. Fetch JSON
+  fetch('/pages/posts/file_index.json')
+    .then(res => res.json())
+    .then(data => {
+      count = Array.isArray(data) ? data.length : Object.keys(data).length;
+      console.log('Element count:', count);
 
-            for (let i = 0; i < count; i++) {
-                const wrapper = document.createElement('div');
-                wrapper.classList.add('mod-wrapper');
+      putElements();
+    })
+    .catch(err => console.error('Error loading JSON:', err));
 
-                wrapper.innerHTML = `
-                <div class="card obj_round_corner" style="color: white;">
-                    <img src="img_avatar.png" alt="Avatar">
-                    <div class="container">
-                        <h4><b>John Doe</b></h4>
-                        <p>Architect & Engineer</p>
-                    </div>
-                </div>
-                `;
-            container.appendChild(wrapper);
-            }
-        }
+  function putElements(){
+    console.log("putElements ran; count =", count);
+    const container = document.getElementById('mods-container');
+    container.innerHTML = '';
 
-        
-    </script>
+    for (let i = 0; i < count; i++) {
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('mod-wrapper');
+      wrapper.innerHTML = `
+        <div class="card obj_round_corner" style="color: white;">
+          <img src="img_avatar.png" alt="Avatar">
+          <div class="container">
+            <h4><b>John Doe</b></h4>
+            <p>Architect & Engineer</p>
+          </div>
+        </div>`;
+      container.appendChild(wrapper);
+    }
+  }
+
+  // optional: still allow manual retry
+  window.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('button').addEventListener('click', putElements);
+  });
+</script>
+
 </html>
