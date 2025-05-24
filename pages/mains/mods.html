@@ -2,62 +2,51 @@
 <html>
     <head>
         <base href="/">
+        <link rel="stylesheet" type="text/css" href="styles/card_base.css">
+        <link rel="stylesheet" type="text/css" href="styles/dynamic_elements/dynamic_card_base.css">
+        <link rel="stylesheet" type="text/css" href="styles/util.css">
     </head>
     
     <body style="padding-top: 20vh;">
         <p style="color: white;">Hello there! (mods page)</p>
-        <button onclick="loadPostMetadata('/pages/posts/file_index.json')">Test</button>
-        <div id="mods-container" class="mods-grid"></div>
+        <button onclick="putElements()">Test</button>
+        <div style="width: 95vw;" >
+            <div id="mods-container" class="mods-grid" style="display: flex; flex-direction: row; width: 100%; flex-wrap: wrap;" class="obj_center_align"></div>
+        </div>
+        
     </body>
     <script>
-    async function loadLatestPosts() {
-  const container = document.getElementById('mods-container');
-  if (!container) {
-    console.error('#mods-container not found');
-    return;
-  }
-  container.innerHTML = '';
+        let count = 0;
+        fetch('/pages/posts/file_index.json') // path to your JSON file
+            .then(response => response.json())
+            .then(data => {
+            // If it's a JSON array
+            count = Array.isArray(data) ? data.length : Object.keys(data).length;
+            console.log('Element count:', count);
+        })
+        .catch(error => console.error('Error loading JSON:', error));
 
-  // STEP 1: Load the index of HTML files
-  let postFiles;
-  try {
-    const response = await fetch('/pages/posts/file_index.json');  // ← JSON, not HTML
-    if (!response.ok) throw new Error('Failed to load index');
-    postFiles = await response.json(); // ← array of HTML file paths
-  } catch (err) {
-    console.error(err);
-    return;
-  }
+        function putElements(){
+            const container = document.getElementById('mods-container');
+            container.innerHTML = '';
 
-  // STEP 2: Load metadata for each HTML file
-  const fragment = document.createDocumentFragment();
-  let row = null;
+            for (let i = 0; i < count; i++) {
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('mod-wrapper');
 
-  for (let i = 0; i < postFiles.length; i++) {
-    const filePath = postFiles[i]; // this is a path to a .html
-    const meta = await loadPostMetadata(filePath);
-    if (!meta) continue;
+                wrapper.innerHTML = `
+                <div class="card obj_round_corner" style="color: white;">
+                    <img src="img_avatar.png" alt="Avatar">
+                    <div class="container">
+                        <h4><b>John Doe</b></h4>
+                        <p>Architect & Engineer</p>
+                    </div>
+                </div>
+                `;
+            container.appendChild(wrapper);
+            }
+        }
 
-    if (i % 3 === 0) {
-      row = document.createElement('div');
-      row.className = 'card-row';
-      fragment.appendChild(row);
-    }
-
-    const card = document.createElement('div');
-    card.className = 'card obj_round_corner';
-    card.innerHTML = `
-      <img src="${meta.image}" alt="${meta.title}"
-           style="width:${meta.imageWidth}; height:${meta.imageHeight};">
-      <div class="container">
-        <h4><b>${meta.title}</b></h4>
-        <p>${meta.excerpt}</p>
-      </div>
-    `;
-    row.appendChild(card);
-  }
-
-  container.appendChild(fragment);
-}
-</script>
+        
+    </script>
 </html>

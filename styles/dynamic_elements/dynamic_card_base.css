@@ -1,0 +1,6 @@
+/* in styles/util.css or card_base.css */
+.mods-grid > .mod-wrapper {
+  flex: 1 1 calc(25% - 3vw); /* four per row (adjust 25% if you want more/fewer) */
+  box-sizing: border-box;
+  margin-bottom: 3vw;        /* vertical spacing */
+}
