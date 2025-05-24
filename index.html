@@ -30,11 +30,11 @@
   <body class="roboto-roboto">
     <div class="topnav" >
       <img src="https://mcmodreview.github.io/logo.png">
-      <a id="homeButton" onclick="updateIframeSrc('page_content_iframe', '/main_page.html')">
+      <a id="homeButton" onclick="updateIframeSrc('page_content_iframe', '/pages/mains/main_page.html')">
         <i class="bi bi-house-fill"></i>
         <span>Home</span>
       </a>
-      <a id="modsButton" onclick="updateIframeSrc('page_content_iframe', '/posts.html')">
+      <a id="modsButton" onclick="updateIframeSrc('page_content_iframe', '/pages/mains/posts.html')">
         <i class="bi bi-newspaper"></i>
         <span>Reviews</span>
       </a>
@@ -44,7 +44,7 @@
       </a>
     </div>
 
-    <iframe id="page_content_iframe" src="main_page.html" title="page_content_iframe" style="height:95vh; width: 100vw; border:none; padding-bottom: 5vh;"></iframe>
+    <iframe id="page_content_iframe" src="pages/mains/main_page.html" title="page_content_iframe" style="height:95vh; width: 100vw; border:none; padding-bottom: 5vh;"></iframe>
   </body>
   <script>
     function updateIframeSrc(iframeId, newPath) {
