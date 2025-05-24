@@ -3,7 +3,86 @@
     <head>
 
     </head>
+    
     <body style="padding-top: 20vh;">
         <p style="color: white;">Hello there! (mods page)</p>
+        <div id="mods-container" class="mods-grid"></div>
     </body>
+    <script>
+  async function loadPostMetadata(file) {
+    try {
+      const res = await fetch(file);
+      if (!res.ok) throw new Error(`Failed to load post file: ${file}`);
+      const text = await res.text();
+      const doc  = new DOMParser().parseFromString(text, "text/html");
+      const json = doc.getElementById("post-metadata")?.textContent;
+      if (!json) throw new Error(`No post metadata found in: ${file}`);
+      const metadata = JSON.parse(json);
+
+      // defaults
+      metadata.imageWidth  = metadata.imageWidth  || '75%';
+      metadata.imageHeight = metadata.imageHeight || 'auto';
+      return metadata;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  async function loadLatestPosts() {
+    const container = document.getElementById('mods-container');
+    if (!container) {
+      console.error('#mods-container not found');
+      return;
+    }
+    container.innerHTML = '';
+
+    // 1. fetch your index.json
+    let postFiles;
+    try {
+      const idxResp = await fetch('/posts/file_index.json');
+      if (!idxResp.ok) throw new Error('Failed to load posts index');
+      postFiles = await idxResp.json();
+    } catch (err) {
+      console.error(err);
+      return;
+    }
+
+    // 2. load metadata for each, build cards
+    const fragment = document.createDocumentFragment();
+    let rowDiv = null;
+
+    for (let i = 0; i < postFiles.length; i++) {
+      const file = postFiles[i];
+      const meta = await loadPostMetadata(file);
+      if (!meta) continue;
+
+      // every 3 cards, start a new row
+      if (i % 3 === 0) {
+        rowDiv = document.createElement('div');
+        rowDiv.className = 'card-row';
+        fragment.appendChild(rowDiv);
+      }
+
+      // build the card
+      const card = document.createElement('div');
+      card.className = 'card obj_round_corner';
+      card.innerHTML = `
+        <img src="${meta.image}" alt="${meta.title}"
+             style="width:${meta.imageWidth}; height:${meta.imageHeight};">
+        <div class="container">
+          <h4><b>${meta.title}</b></h4>
+          <p>${meta.excerpt}</p>
+        </div>
+      `;
+
+      rowDiv.appendChild(card);
+    }
+
+    container.appendChild(fragment);
+  }
+
+  // kick it off on load
+  window.addEventListener('DOMContentLoaded', loadLatestPosts);
+</script>
 </html>
