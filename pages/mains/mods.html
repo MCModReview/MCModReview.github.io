@@ -64,7 +64,7 @@
           const wrapper = document.createElement('div');
           wrapper.classList.add('mod-wrapper');
           wrapper.innerHTML = `
-            <div class="card obj_round_corner" style="color: white;">
+            <div class="card obj_round_corner" style="color: white;" onclick="parent.updateIframeSrc('page_content_iframe', '${meta.onclickURL}')">
               <img 
                 src="${meta.image}" 
                 alt="${meta.title}" 
@@ -98,6 +98,7 @@
         .catch(err => console.error('Error reloading JSON index:', err));
     });
   });
+
 </script>
 
 
