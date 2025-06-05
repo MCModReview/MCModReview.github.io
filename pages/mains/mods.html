@@ -14,43 +14,91 @@
         
     </body>
     <script>
+  let postsData = [];
   let count = 0;
 
-  // 1. Fetch JSON
+  // 1. Fetch JSON index of posts
   fetch('/pages/posts/file_index.json')
     .then(res => res.json())
     .then(data => {
-      count = Array.isArray(data) ? data.length : Object.keys(data).length;
+      postsData = Array.isArray(data) ? data : Object.keys(data);
+      count = postsData.length;
       console.log('Element count:', count);
-
-      putElements();
+      putElements(postsData);
     })
-    .catch(err => console.error('Error loading JSON:', err));
+    .catch(err => console.error('Error loading JSON index:', err));
 
-  function putElements(){
+  function putElements(data) {
     console.log("putElements ran; count =", count);
     const container = document.getElementById('mods-container');
     container.innerHTML = '';
 
-    for (let i = 0; i < count; i++) {
-      const wrapper = document.createElement('div');
-      wrapper.classList.add('mod-wrapper');
-      wrapper.innerHTML = `
-        <div class="card obj_round_corner" style="color: white;">
-          <img src="img_avatar.png" alt="Avatar">
-          <div class="container">
-            <h4><b>John Doe</b></h4>
-            <p>Architect & Engineer</p>
-          </div>
-        </div>`;
-      container.appendChild(wrapper);
-    }
+    data.forEach(postPath => {
+      // For each post, fetch its HTML to extract the metadata block
+      fetch(postPath)
+        .then(res => {
+          if (!res.ok) {
+            throw new Error(`Failed to fetch post at ${postPath} (status: ${res.status})`);
+          }
+          return res.text();
+        })
+        .then(htmlString => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlString, 'text/html');
+          const metaScript = doc.getElementById('post-metadata');
+
+          if (!metaScript) {
+            console.error(`Missing <script id="post-metadata"> in ${postPath}`);
+            return;
+          }
+
+          let meta;
+          try {
+            meta = JSON.parse(metaScript.textContent);
+          } catch (e) {
+            console.error(`Invalid JSON in metadata for ${postPath}:`, e);
+            return;
+          }
+
+          // Create the card wrapper using metadata values
+          const wrapper = document.createElement('div');
+          wrapper.classList.add('mod-wrapper');
+          wrapper.innerHTML = `
+            <div class="card obj_round_corner" style="color: white;">
+              <img 
+                src="${meta.image}" 
+                alt="${meta.title}" 
+                style="width: ${meta.imageWidth}; height: ${meta.imageHeight}; object-fit: cover;"
+              >
+              <div class="container">
+                <h4><b>${meta.title}</b></h4>
+                <p>${meta.excerpt}</p>
+              </div>
+            </div>`;
+
+          container.appendChild(wrapper);
+        })
+        .catch(err => {
+          console.error(`Error processing post ${postPath}:`, err);
+        });
+    });
   }
 
-  // optional: still allow manual retry
+  // Optional: still allow manual retry by re-fetching the JSON index
   window.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('button').addEventListener('click', putElements);
+    document.querySelector('button').addEventListener('click', () => {
+      fetch('/pages/posts/file_index.json')
+        .then(res => res.json())
+        .then(data => {
+          postsData = Array.isArray(data) ? data : Object.keys(data);
+          count = postsData.length;
+          console.log('Retry: Element count:', count);
+          putElements(postsData);
+        })
+        .catch(err => console.error('Error reloading JSON index:', err));
+    });
   });
 </script>
+
 
 </html>
