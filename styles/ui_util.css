@@ -1,0 +1,16 @@
+.ui_obj_round {
+    border-radius: 100%;
+    border: none;
+}
+
+.ui_dropdown_content {
+  display: none;
+  position: absolute;
+  top: 100%; /* Below the button */
+  left: 0;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
